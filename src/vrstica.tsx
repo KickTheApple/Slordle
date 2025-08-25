@@ -3,18 +3,21 @@ import Element from "./element.tsx";
 
 interface VrsticaProps {
     stevilka : number
+    besedilo : string
+    y : number
+    singer : Array<string>
 }
 
-export default function Vrstica(stevilka : VrsticaProps) {
+export default function Vrstica( stevilka : VrsticaProps) {
 
-    const elementsInVrstica = [];
-    for (let i = 0; i < stevilka.stevilka; i++) {
-        elementsInVrstica.push(<Element />);
+    const alleElemente = []
+    for (let lenge = 0; lenge < stevilka.stevilka; lenge++) {
+        alleElemente.push(<Element x={lenge} y={stevilka.y} thing={stevilka.singer[lenge]} />);
     }
 
     return (
         <div id={"row"}>
-            {elementsInVrstica}
+            {alleElemente}
         </div>
     )
 }
