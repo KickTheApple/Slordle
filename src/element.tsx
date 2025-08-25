@@ -1,16 +1,26 @@
 import "./element.css";
+import {useEffect, useState} from "react";
 
 
 interface prop {
-    x ?: string
+    x : number
+    y : number
+    thing : string
 }
 
-export default function Element( text : prop) {
+function Element( text : prop) {
+
+    const [ content, setContent ] = useState(text.thing);
+
+    console.log(text);
+    console.log(content)
 
     return (
         <>
-            <div id={"element"}>{text.x}</div>
+            <div id={"element"}>{text.thing}</div>
         </>
     )
 
 }
+
+export default Element;
