@@ -3,7 +3,7 @@ import {useEffect} from "react";
 import {useState} from "react";
 import Vrstica from "./vrstica.tsx";
 
-const word = "TADEJ"
+const word = "COMFY"
 
 function WordMaker(guess : Array<string>) : string {
 
@@ -36,20 +36,21 @@ export default function Spiel() {
     const [ eyeLiner, setEyeLiner ] = useState(0);
     const [ linerLiner, setLinerLiner ] = useState(0);
 
-    const [ theWorlde, setTheWordle ] = useState(Array(6).fill(Array(5).fill("")));
+    const [ theWorlde, setTheWordle ] = useState(Array(6).fill(undefined).map(v => (Array(5).fill(undefined).map(u => ({content: "", state: 0})))));
 
     const keyPressRoutine = ( event: { key: any; }) => {
         console.log(event.key);
         if (event.key === "Enter" && eyeLiner >= 5) {
-            for (let basil = 0; basil < 5; basil++) {
-                if (softLetterMatcher(theWorlde[linerLiner][eyeLiner])) {
-                    if (hardLetterMatcher(theWorlde[linerLiner][eyeLiner], eyeLiner)) {
-
+            for (let location = 0; location < 5; location++) {
+                if (softLetterMatcher(theWorlde[linerLiner][location].content)) {
+                    if (hardLetterMatcher(theWorlde[linerLiner][location].content, location)) {
+                        console.log("TRUE")
+                        theWorlde[linerLiner][location].state = 1;
                     } else {
-
+                        theWorlde[linerLiner][location].state = 2;
                     }
                 } else {
-
+                    theWorlde[linerLiner][location].state = 3;
                 }
             }
             setEyeLiner(0);
@@ -60,7 +61,7 @@ export default function Spiel() {
                 setTheWordle(theWorldle => theWorldle.map((arr, i) =>
                     arr.map((item, j) => {
                         if (i === linerLiner && j === eyeLiner) {
-                            return "";
+                            item.content = "";
                         }
                         return item;
                     })
@@ -69,7 +70,7 @@ export default function Spiel() {
                 setTheWordle(theWorldle => theWorldle.map((arr, i) =>
                     arr.map((item, j) => {
                         if (i === linerLiner && j === eyeLiner) {
-                            return event.key;
+                            item.content = event.key;
                         }
                         return item;
                     })
