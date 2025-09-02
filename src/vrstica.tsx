@@ -3,7 +3,6 @@ import Element from "./element.tsx";
 
 interface VrsticaProps {
     stevilka : number
-    besedilo : string
     y : number
     singer : Array<string>
 }

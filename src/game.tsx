@@ -18,7 +18,7 @@ function WordMaker(guess : Array<string>) : string {
 function softLetterMatcher(guess : string) : boolean {
 
     for (let x = 0; x < word.length; x++) {
-        if (word.charAt(x) === guess) {
+        if (guess === word.charAt(x)) {
             return true;
         }
     }
@@ -27,24 +27,23 @@ function softLetterMatcher(guess : string) : boolean {
 }
 
 function hardLetterMatcher(guess : string, index : number) : boolean {
-    return word.charAt(index) === guess;
+    return guess === word.charAt(index);
 }
 
 export default function Spiel() {
 
     const lineOfLines = [];
-    const [ text, setText] = useState("")
     const [ eyeLiner, setEyeLiner ] = useState(0);
     const [ linerLiner, setLinerLiner ] = useState(0);
 
-    const [ theWorlde, setTheWordle ] = useState([["", "", "", "", ""], ["", "", "", "", ""], ["", "", "", "", ""], ["", "", "", "", ""], ["", "", "", "", ""], ["", "", "", "", ""]])
+    const [ theWorlde, setTheWordle ] = useState(Array(6).fill(Array(5).fill("")));
 
     const keyPressRoutine = ( event: { key: any; }) => {
         console.log(event.key);
         if (event.key === "Enter" && eyeLiner >= 5) {
             for (let basil = 0; basil < 5; basil++) {
                 if (softLetterMatcher(theWorlde[linerLiner][eyeLiner])) {
-                    if (hardLetterMatcher(theWorlde[linerLiner][eyeLiner])) {
+                    if (hardLetterMatcher(theWorlde[linerLiner][eyeLiner], eyeLiner)) {
 
                     } else {
 
@@ -78,7 +77,6 @@ export default function Spiel() {
                 setEyeLiner(eyeLiner + 1);
             }
         }
-        setText(event.key);
         console.log(theWorlde);
     }
 
@@ -90,7 +88,7 @@ export default function Spiel() {
     })
 
     for (let poskus = 0; poskus < 6; poskus++) {
-        lineOfLines.push(<Vrstica stevilka={5} besedilo={text} y={poskus} singer={theWorlde[poskus]}/>);
+        lineOfLines.push(<Vrstica stevilka={5} y={poskus} singer={theWorlde[poskus]}/>);
     }
 
     return (
