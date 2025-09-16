@@ -5,7 +5,7 @@ function App() {
 
   return (
     <>
-      <Spiel></Spiel>
+      <Spiel key={0 .toString()} />
     </>
   )
 }

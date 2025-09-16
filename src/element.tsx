@@ -1,5 +1,6 @@
 import "./element.css";
-import {useEffect, useState} from "react";
+import {useEffect, useReducer, useState} from "react";
+import {flushSync} from "react-dom";
 
 interface ElementInstance {
     content : string
@@ -8,14 +9,13 @@ interface ElementInstance {
 
 
 interface prop {
+    key : string
     x : number
     y : number
     thing : ElementInstance
 }
 
 function Element( text : prop) {
-
-    const [ content, setContent ] = useState(text.thing.content);
 
     //console.log(text);
     //console.log(content)
@@ -37,7 +37,7 @@ function Element( text : prop) {
 
     return (
         <>
-            <div id={"element"} style={{backgroundColor : stylist(text.thing.state)}}>{text.thing.content}</div>
+            <div key={text.thing.content} id={"element"} style={{backgroundColor : stylist(text.thing.state)}}>{text.thing.content}</div>
         </>
     )
 
