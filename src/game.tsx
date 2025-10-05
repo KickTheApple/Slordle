@@ -7,6 +7,10 @@ import key from "./key.tsx";
 
 const word = "OPERO"
 
+interface Colors {
+    colors: Array<number>
+}
+
 interface Elementek {
     content: string;
     state: number;
@@ -70,19 +74,24 @@ export default function Spiel(props : Prop) {
     const keyPressRoutine = ( event: { key: any; }) => {
         console.log(event.key);
         if (event.key === "Enter" && eyeLiner >= 5) {
-            for (let location = 0; location < 5; location++) {
-                if (hardLetterMatcher(theWorlde[linerLiner][location].content, location)) {
-                    theWorlde[linerLiner][location].state = 1;
-                } else {
-                    if (softLetterMatcher(theWorlde[linerLiner][location].content, WordMaker(theWorlde[linerLiner]))) {
-                        theWorlde[linerLiner][location].state = 2;
-                    } else {
-                        theWorlde[linerLiner][location].state = 3;
-                    }
+            fetch('http://localhost:8080/api/GuessTest', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    word: WordMaker(theWorlde[linerLiner]),
+                }),
+            }).then(function (response: Response) {
+                return response.json();
+            }).then(function (jsonData : Colors) {
+                for (let location = 0; location < 5; location++) {
+                    theWorlde[linerLiner][location].state = jsonData.colors[location];
                 }
-            }
-            setEyeLiner(0);
-            setLinerLiner(linerLiner + 1);
+                setEyeLiner(0);
+                setLinerLiner(linerLiner + 1);
+            });
         } else {
             if (event.key === "Backspace" && eyeLiner > 0) {
                 setTheWordle(theWorldle => theWorldle.map((arr, i) =>
@@ -124,19 +133,24 @@ export default function Spiel(props : Prop) {
         }
 
         if (foundPress === "Enter" && eyeLiner >= 5) {
-            for (let location = 0; location < 5; location++) {
-                if (hardLetterMatcher(theWorlde[linerLiner][location].content, location)) {
-                    theWorlde[linerLiner][location].state = 1;
-                } else {
-                    if (softLetterMatcher(theWorlde[linerLiner][location].content, WordMaker(theWorlde[linerLiner]))) {
-                        theWorlde[linerLiner][location].state = 2;
-                    } else {
-                        theWorlde[linerLiner][location].state = 3;
-                    }
+            fetch('http://localhost:8080/api/GuessTest', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    word: WordMaker(theWorlde[linerLiner]),
+                }),
+            }).then(function (response: Response) {
+                return response.json();
+            }).then(function (jsonData : Colors) {
+                for (let location = 0; location < 5; location++) {
+                    theWorlde[linerLiner][location].state = jsonData.colors[location];
                 }
-            }
-            setEyeLiner(0);
-            setLinerLiner(linerLiner + 1);
+                setEyeLiner(0);
+                setLinerLiner(linerLiner + 1);
+            });
         } else {
             if (foundPress === "Backspace" && eyeLiner > 0) {
                 setTheWordle(theWorldle => theWorldle.map((arr, i) =>
