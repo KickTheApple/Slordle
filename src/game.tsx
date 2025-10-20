@@ -7,6 +7,14 @@ import key from "./key.tsx";
 
 const word = "OPERO"
 
+interface Lawful {
+    law: string[]
+}
+
+interface Colors {
+    colors: Array<number>
+}
+
 interface Elementek {
     content: string;
     state: number;
@@ -57,32 +65,57 @@ function identifier(keyboardIndex: Array<KeyState>) : string {
     return "";
 }
 
+function comparePromise(listOfValidWords: Promise<string[]>) : Lawful {
+    const laws: Lawful = { law: [""]};
+    listOfValidWords.then(validList => laws.law = validList)
+    return laws;
+}
+
+function checkLawfulness(listOfLaws: Lawful, guess: string): boolean {
+    for (let i = 0; i < listOfLaws.law.length; i++) {
+        if (listOfLaws.law[i] === guess) {
+            return true;
+        }
+    }
+    return false;
+}
+
 export default function Spiel(props : Prop) {
 
     const lineOfLines = [];
     const [ eyeLiner, setEyeLiner ] = useState(0);
     const [ linerLiner, setLinerLiner ] = useState(0);
 
+    const legalWords: Promise<string[]> = fetch("./src/sbsj.txt")
+        .then(r => r.text())
+        .then( lines => lines.split("\n")
+            .map(beseda => beseda.replace("\r", "").toUpperCase()).filter(beseda => beseda.length === 5));
+    const lawWordList : Lawful = comparePromise(legalWords);
+
     const [ theWorlde, setTheWordle ] = useState(Array(6).fill(undefined).map(v => (Array(5).fill(undefined).map(u => ({content: "", state: 0})))));
     const [ keyboardIndex, setKeyboardIndex ] = useState(Array(27).fill(undefined).map((u, index) => ({content: "A B C Č D E F G H I J K L M N O P R S Š T U V Z Ž Enter Backspace".split(" ")[index], state: 0, status: false})));
 
-
     const keyPressRoutine = ( event: { key: any; }) => {
-        console.log(event.key);
-        if (event.key === "Enter" && eyeLiner >= 5) {
-            for (let location = 0; location < 5; location++) {
-                if (hardLetterMatcher(theWorlde[linerLiner][location].content, location)) {
-                    theWorlde[linerLiner][location].state = 1;
-                } else {
-                    if (softLetterMatcher(theWorlde[linerLiner][location].content, WordMaker(theWorlde[linerLiner]))) {
-                        theWorlde[linerLiner][location].state = 2;
-                    } else {
-                        theWorlde[linerLiner][location].state = 3;
-                    }
+
+        if (event.key === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
+            fetch('http://localhost:8080/api/GuessTest', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    word: WordMaker(theWorlde[linerLiner]),
+                }),
+            }).then(function (response: Response) {
+                return response.json();
+            }).then(function (jsonData : Colors) {
+                for (let location = 0; location < 5; location++) {
+                    theWorlde[linerLiner][location].state = jsonData.colors[location];
                 }
-            }
-            setEyeLiner(0);
-            setLinerLiner(linerLiner + 1);
+                setEyeLiner(0);
+                setLinerLiner(linerLiner + 1);
+            });
         } else {
             if (event.key === "Backspace" && eyeLiner > 0) {
                 setTheWordle(theWorldle => theWorldle.map((arr, i) =>
@@ -123,20 +156,25 @@ export default function Spiel(props : Prop) {
             return
         }
 
-        if (foundPress === "Enter" && eyeLiner >= 5) {
-            for (let location = 0; location < 5; location++) {
-                if (hardLetterMatcher(theWorlde[linerLiner][location].content, location)) {
-                    theWorlde[linerLiner][location].state = 1;
-                } else {
-                    if (softLetterMatcher(theWorlde[linerLiner][location].content, WordMaker(theWorlde[linerLiner]))) {
-                        theWorlde[linerLiner][location].state = 2;
-                    } else {
-                        theWorlde[linerLiner][location].state = 3;
-                    }
+        if (foundPress === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
+            fetch('http://localhost:8080/api/GuessTest', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    word: WordMaker(theWorlde[linerLiner]),
+                }),
+            }).then(function (response: Response) {
+                return response.json();
+            }).then(function (jsonData : Colors) {
+                for (let location = 0; location < 5; location++) {
+                    theWorlde[linerLiner][location].state = jsonData.colors[location];
                 }
-            }
-            setEyeLiner(0);
-            setLinerLiner(linerLiner + 1);
+                setEyeLiner(0);
+                setLinerLiner(linerLiner + 1);
+            });
         } else {
             if (foundPress === "Backspace" && eyeLiner > 0) {
                 setTheWordle(theWorldle => theWorldle.map((arr, i) =>
