@@ -1,0 +1,10 @@
+#KeyZone {
+    margin: auto;
+    width: 70%;
+    max-width: 1000px;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}

@@ -1,10 +1,19 @@
 #kljuc {
 
-    padding: 20px;
+   padding: 1em;
     background-color: white;
-    margin-left: 5px;
     border-style: solid;
     border-color: #000000;
     color: black;
+    flex: 1 0 auto;
+    min-width: 20px;
+    max-width: 60px;
+    text-align: center;
+    font-size: clamp(0.8rem, 2vw, 1.2rem);
 
+}
+
+#kljuc.special {
+    flex: 1.5 0 auto;
+    max-width: 130px;
 }

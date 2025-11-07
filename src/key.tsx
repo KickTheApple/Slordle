@@ -18,9 +18,13 @@ function Key(thing: prop) {
     const obamna = () => {
         thing.thing.status = true;
     }
-
     return (
-        <button id={"kljuc"} onClick={obamna}>{thing.thing.content}</button>
+        <button id={"kljuc"} 
+        onClick={obamna}
+        className={thing.thing.content === "Enter" || thing.thing.content === "Backspace" ? "special" : ""}
+        >
+            
+        {thing.thing.content}</button>
     );
 }
 

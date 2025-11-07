@@ -23,15 +23,15 @@ function Element( text : prop) {
     function stylist(status : number) : string {
         switch (status) {
             case 0:
-                return "white";
+                return "#121212"; // background black
             case 1:
-                return "green";
+                return "green";  // correct guess
             case 2:
-                return "yellow";
+                return "#b59e3b"; // wrong spot
             case 3:
-                return "gray";
+                return "#3a3a3c"; // wrong
             default:
-                return "white"
+                return "#121212"
         }
     }
 
