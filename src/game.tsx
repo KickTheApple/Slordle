@@ -3,7 +3,6 @@ import {use, useEffect} from "react";
 import {useState} from "react";
 import Vrstica from "./vrstica.tsx";
 import Keyboard from "./keyboard.tsx";
-import key from "./key.tsx";
 
 const word = "OPERO"
 

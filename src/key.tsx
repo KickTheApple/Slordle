@@ -1,6 +1,4 @@
 import "./key.css";
-import {useEffect} from "react";
-import Vrstica from "./vrstica.tsx";
 
 interface KeyState {
     content : string;

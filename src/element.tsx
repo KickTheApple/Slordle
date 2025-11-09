@@ -1,6 +1,4 @@
 import "./element.css";
-import {useEffect, useReducer, useState} from "react";
-import {flushSync} from "react-dom";
 
 interface ElementInstance {
     content : string
