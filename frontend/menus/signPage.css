@@ -1,0 +1,86 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Franklin Gothic Medium", "Helvetica Neue", Arial, sans-serif;
+}
+
+#sign_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 420px;
+    text-align: center;
+    height: 90vh;
+    padding: 20px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+#sign_title h2, p {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 0.03em;
+}
+
+#sign_data {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#sign_username,
+#sign_passowrd {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 6px;
+}
+
+#sign_username label,
+#sign_passowrd label {
+    font-size: 0.9rem;
+    color: #eee;
+}
+
+#sign_username small {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+#sign_username .p-inputtext,
+#sign_passowrd .p-inputtext {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+#sign_confirmation {
+    width: 100%;
+    margin-top: 28px;
+}
+
+#sign_confirmation button {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #000;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    font-weight: 600;
+    background-color: #000;
+    color: #fff;
+}
+
+#sign_confirmation button:hover {
+    background-color: #222;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

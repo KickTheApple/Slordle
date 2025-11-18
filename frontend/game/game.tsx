@@ -4,8 +4,6 @@ import {useState} from "react";
 import Vrstica from "./vrstica.tsx";
 import Keyboard from "./keyboard.tsx";
 
-const word = "OPERO"
-
 interface Lawful {
     law: string[]
 }
@@ -39,21 +37,6 @@ function WordMaker(guess : Array<Elementek>) : string {
 
 }
 
-function softLetterMatcher(guess : string, guessedWord : string) : boolean {
-
-    for (let x = 0; x < word.length; x++) {
-        if (word.charAt(x) !== guessedWord.charAt(x) && word.charAt(x) === guess) {
-            return true;
-        }
-    }
-    return false;
-
-}
-
-function hardLetterMatcher(guess : string, index : number) : boolean {
-    return guess === word.charAt(index);
-}
-
 function identifier(keyboardIndex: Array<KeyState>) : string {
     for (let index = 0; index < keyboardIndex.length; index++) {
         if (keyboardIndex[index].status) {
@@ -85,7 +68,7 @@ export default function Spiel(props : Prop) {
     const [ eyeLiner, setEyeLiner ] = useState(0);
     const [ linerLiner, setLinerLiner ] = useState(0);
 
-    const legalWords: Promise<string[]> = fetch("./src/sbsj.txt")
+    const legalWords: Promise<string[]> = fetch("./frontend/sbsj.txt")
         .then(r => r.text())
         .then( lines => lines.split("\n")
             .map(beseda => beseda.replace("\r", "").toUpperCase()).filter(beseda => beseda.length === 5));
@@ -94,8 +77,7 @@ export default function Spiel(props : Prop) {
     const [ theWorlde, setTheWordle ] = useState(Array(6).fill(undefined).map(v => (Array(5).fill(undefined).map(u => ({content: "", state: 0})))));
     const [ keyboardIndex, setKeyboardIndex ] = useState(Array(27).fill(undefined).map((u, index) => ({content: "A B C Č D E F G H I J K L M N O P R S Š T U V Z Ž Enter Backspace".split(" ")[index], state: 0, status: false})));
 
-    const keyPressRoutine = ( event: { key: any; }) => {
-
+    const keyPressRoutine = ( event: { key: string; }) => {
         if (event.key === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
             fetch('http://localhost:8080/api/GuessTest', {
                 method: 'POST',

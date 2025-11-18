@@ -1,8 +1,7 @@
 import './App.css'
-import Spiel from "./game.tsx"
-import Menu from "./menu.tsx"
+import Spiel from "./game/game.tsx"
+import Menu from "./menus/menu.tsx"
 import {useState} from "react";
-
 function App() {
 
     const [isMenu, setIsMenu] = useState(true);

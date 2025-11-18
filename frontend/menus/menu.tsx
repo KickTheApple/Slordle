@@ -1,5 +1,4 @@
 import "./menu.css"
-import * as React from "react";
 import type {Dispatch, SetStateAction} from "react";
 
 interface Maneur {
@@ -16,16 +15,25 @@ function Menu(prop : Maneur) {
         prop.setMenu(false);
     };
 
+    const redirectorSignup = () => {
+        window.location.href = "http://localhost:5173/signup";
+    }
+
+    const redirectorLogin = () => {
+        window.location.href = "http://localhost:5173/login";
+    }
+
     return (
         <div id={"menu-container"}>
             <div id={"upper-text-group"}>
-                <img src="../src/wordle2.png"  alt={""} />
+                <img src="../../frontend/wordle2.png" alt={""} />
                 <h2 id={"thingTitle"}>Slordle</h2>
                 <p id={"descriptor"}></p>
                 <p id={"descriptor"}></p>
             </div>
             <div id={"menu-button-group"}>
-                <button id={"button-white"}>Login</button>
+                <button id={"button-white"} onClick={redirectorSignup}>Register</button>
+                <button id={"button-white"} onClick={redirectorLogin}>Login</button>
                 <button id={"button-black"} onClick={handleLoginClick}>Play</button>
             </div>
             <div id={"lower-text-group"}>
