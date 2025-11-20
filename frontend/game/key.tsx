@@ -1,6 +1,4 @@
 import "./key.css";
-import {useEffect} from "react";
-import Vrstica from "./vrstica.tsx";
 
 interface KeyState {
     content : string;
@@ -18,9 +16,13 @@ function Key(thing: prop) {
     const obamna = () => {
         thing.thing.status = true;
     }
-
     return (
-        <button id={"kljuc"} onClick={obamna}>{thing.thing.content}</button>
+        <button id={"kljuc"} 
+        onClick={obamna}
+        className={thing.thing.content === "Enter" || thing.thing.content === "Backspace" ? "special" : ""}
+        >
+            
+        {thing.thing.content}</button>
     );
 }
 
