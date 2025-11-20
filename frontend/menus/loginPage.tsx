@@ -1,7 +1,11 @@
 import "./signPage.css"
 import { InputText } from "primereact/inputtext"
+import {useState} from "react";
 
 function LoginPage() {
+
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
 
     return (
         <>
@@ -12,11 +16,11 @@ function LoginPage() {
                 <div id={"sign_data"}>
                     <div id={"sign_username"}>
                         <label htmlFor="username">Username</label>
-                        <InputText id="username" aria-describedby="username-help" />
+                        <InputText id="username" aria-describedby="username-help" value={username} onChange={(e) => {setUsername(e.target.value)}}/>
                     </div>
                     <div id={"sign_passowrd"}>
                         <label htmlFor="username">Password</label>
-                        <InputText id="username" aria-describedby="username-help" />
+                        <InputText id="username" aria-describedby="username-help" value={password} onChange={(e) => {setPassword(e.target.value)}}/>
                     </div>
 
                 </div>
