@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin("*")
 public class SlordleRestController {
 
     public String theWorld = "BAKER";

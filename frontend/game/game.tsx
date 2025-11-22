@@ -68,7 +68,7 @@ export default function Spiel(props : Prop) {
     const [ eyeLiner, setEyeLiner ] = useState(0);
     const [ linerLiner, setLinerLiner ] = useState(0);
 
-    const legalWords: Promise<string[]> = fetch("./frontend/sbsj.txt")
+    const legalWords: Promise<string[]> = fetch("/sbsj.txt")
         .then(r => r.text())
         .then( lines => lines.split("\n")
             .map(beseda => beseda.replace("\r", "").toUpperCase()).filter(beseda => beseda.length === 5));
@@ -78,8 +78,11 @@ export default function Spiel(props : Prop) {
     const [ keyboardIndex, setKeyboardIndex ] = useState(Array(27).fill(undefined).map((u, index) => ({content: "A B C Č D E F G H I J K L M N O P R S Š T U V Z Ž Enter Backspace".split(" ")[index], state: 0, status: false})));
 
     const keyPressRoutine = ( event: { key: string; }) => {
+        console.log("KEY PRESSED: " + event.key);
+        console.log("checkLawfulness: " + checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner])));
         if (event.key === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
-            fetch('http://localhost:8080/api/GuessTest', {
+            console.log("SENDING: {word: " + WordMaker(theWorlde[linerLiner]) + "}");
+            fetch('/api/GuessTest', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -138,7 +141,7 @@ export default function Spiel(props : Prop) {
         }
 
         if (foundPress === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
-            fetch('http://localhost:8080/api/GuessTest', {
+            fetch('/api/GuessTest', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

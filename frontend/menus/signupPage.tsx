@@ -18,7 +18,7 @@ function SignupPage() {
 
 
     const inputHandler = () => {
-        fetch('http://localhost:8080/api/AddUser', {
+        fetch('/api/AddUser', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -39,7 +39,7 @@ function SignupPage() {
                 setPassAbled(true);
             }
             if (jsonData.genState) {
-                window.location.replace("http://localhost:5173")
+                window.location.replace("/")
             }
         });
     }
@@ -63,7 +63,7 @@ function SignupPage() {
                 </div>
                 <div id={"sign_confirmation"}>
                     <button onClick={inputHandler}>Check</button>
-                    <p>If you already have an account <a href="http://localhost:5173/login" target="_self">Login</a></p>
+                    <p>If you already have an account <a href="/login" target="_self">Login</a></p>
                 </div>
             </div>
         </>
