@@ -82,7 +82,7 @@ export default function Spiel(props : Prop) {
         console.log("checkLawfulness: " + checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner])));
         if (event.key === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
             console.log("SENDING: {word: " + WordMaker(theWorlde[linerLiner]) + "}");
-            fetch('/api/GuessTest', {
+            fetch('http://localhost:8080/api/GuessTest', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -141,7 +141,7 @@ export default function Spiel(props : Prop) {
         }
 
         if (foundPress === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
-            fetch('/api/GuessTest', {
+            fetch('http://localhost:8080/api/GuessTest', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
