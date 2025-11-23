@@ -170,5 +170,6 @@ NGINX
 ln -s /etc/nginx/sites-available/appvm /etc/nginx/sites-enabled/appvm || true
 rm -f /etc/nginx/sites-enabled/default
 systemctl restart nginx
+systemctl restart springapp
 
-echo "Provisioning complete."
+echo "===================== Provisioning complete. ====================="
