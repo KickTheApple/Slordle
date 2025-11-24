@@ -68,11 +68,12 @@ export default function Spiel(props : Prop) {
     const [ eyeLiner, setEyeLiner ] = useState(0);
     const [ linerLiner, setLinerLiner ] = useState(0);
 
-    const legalWords: Promise<string[]> = fetch("/frontend/sbsj.txt")
+    const legalWords: Promise<string[]> = fetch("./frontend/sbsj.txt")
         .then(r => r.text())
         .then( lines => lines.split("\n")
             .map(beseda => beseda.replace("\r", "").toUpperCase()).filter(beseda => beseda.length === 5));
     const lawWordList : Lawful = comparePromise(legalWords);
+    console.log(lawWordList);
 
     const [ theWorlde, setTheWordle ] = useState(Array(6).fill(undefined).map(v => (Array(5).fill(undefined).map(u => ({content: "", state: 0})))));
     const [ keyboardIndex, setKeyboardIndex ] = useState(Array(27).fill(undefined).map((u, index) => ({content: "A B C Č D E F G H I J K L M N O P R S Š T U V Z Ž Enter Backspace".split(" ")[index], state: 0, status: false})));
