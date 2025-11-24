@@ -18,7 +18,7 @@ function SignupPage() {
 
 
     const inputHandler = () => {
-        fetch('http://localhost:8080/api/AddUser', {
+        fetch('/api/AddUser', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
