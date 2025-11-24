@@ -94,6 +94,7 @@ export default function Spiel(props : Prop) {
             }).then(function (response: Response) {
                 return response.json();
             }).then(function (jsonData : Colors) {
+                console.log(jsonData);
                 for (let location = 0; location < 5; location++) {
                     theWorlde[linerLiner][location].state = jsonData.colors[location];
                 }
@@ -153,6 +154,7 @@ export default function Spiel(props : Prop) {
             }).then(function (response: Response) {
                 return response.json();
             }).then(function (jsonData : Colors) {
+                console.log(jsonData);
                 for (let location = 0; location < 5; location++) {
                     theWorlde[linerLiner][location].state = jsonData.colors[location];
                 }
