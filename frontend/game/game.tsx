@@ -68,7 +68,7 @@ export default function Spiel(props : Prop) {
     const [ eyeLiner, setEyeLiner ] = useState(0);
     const [ linerLiner, setLinerLiner ] = useState(0);
 
-    const legalWords: Promise<string[]> = fetch("/sbsj.txt")
+    const legalWords: Promise<string[]> = fetch("/frontend/sbsj.txt")
         .then(r => r.text())
         .then( lines => lines.split("\n")
             .map(beseda => beseda.replace("\r", "").toUpperCase()).filter(beseda => beseda.length === 5));
