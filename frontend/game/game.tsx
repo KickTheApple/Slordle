@@ -3,7 +3,7 @@ import {use, useEffect} from "react";
 import {useState} from "react";
 import Vrstica from "./vrstica.tsx";
 import Keyboard from "./keyboard.tsx";
-import words from "./frontend/sbsj.txt"
+import words from "/frontend/sbsj.txt"
 
 interface Lawful {
     law: string[]
