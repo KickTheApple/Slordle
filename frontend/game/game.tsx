@@ -3,6 +3,7 @@ import {use, useEffect} from "react";
 import {useState} from "react";
 import Vrstica from "./vrstica.tsx";
 import Keyboard from "./keyboard.tsx";
+import words from "./frontend/sbsj.txt"
 
 interface Lawful {
     law: string[]
@@ -68,7 +69,7 @@ export default function Spiel(props : Prop) {
     const [ eyeLiner, setEyeLiner ] = useState(0);
     const [ linerLiner, setLinerLiner ] = useState(0);
 
-    const legalWords: Promise<string[]> = fetch("./frontend/sbsj.txt")
+    const legalWords: Promise<string[]> = fetch(words)
         .then(r => r.text())
         .then( lines => lines.split("\n")
             .map(beseda => beseda.replace("\r", "").toUpperCase()).filter(beseda => beseda.length === 5));
