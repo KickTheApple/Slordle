@@ -1,0 +1,70 @@
+#cloud-config
+package_update: true
+packages:
+  - openjdk-21-jdk
+  - nginx
+  - mariadb-server
+  - git
+  - nodejs
+  - npm
+
+write_files:
+  - path: /etc/nginx/sites-available/slordle.conf
+    owner: root:root
+    permissions: "0777"
+    content: |
+      # HTTP on port 80
+      server {
+        listen 80;
+        server_name _;
+        root /home/ubuntu/Slordle/dist;
+        index index.html;
+
+        location / {
+          try_files $uri $uri/ /index.html;
+        }
+
+        location /api/ {
+          proxy_pass http://127.0.0.1:8080;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+        }
+      }
+
+      # HTTPS PORT with NO SSL (not real HTTPS)
+      # Just raw HTTP on port 443
+      server {
+        listen 443;
+        server_name _;
+        root /home/ubuntu/Slordle/dist;
+        index index.html;
+
+        location / {
+          try_files $uri $uri/ /index.html;
+        }
+
+        location /api/ {
+          proxy_pass http://127.0.0.1:8080;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+        }
+      }
+
+runcmd:
+  - git clone -b vagrant-version2 https://github.com/KickTheApple/Slordle.git /home/ubuntu/Slordle
+  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash && \. "$HOME/.nvm/nvm.sh" && nvm install 24
+  - systemctl start mariadb
+  - mariadb -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'admin'; FLUSH PRIVILEGES;"
+  - mysql -u root -padmin -e "CREATE DATABASE IF NOT EXISTS johnData;"
+  - cd /home/ubuntu/Slordle && npm install
+  - cd /home/ubuntu/Slordle && npm run build &
+  - cd /home/ubuntu/Slordle/backend && chmod +x gradlew && ./gradlew build
+  - cd /home/ubuntu/Slordle/backend && ./gradlew bootRun &
+  - chmod -R 777 /home/ubuntu
+
+  # Enable NGINX config
+  - ln -s /etc/nginx/sites-available/slordle.conf /etc/nginx/sites-enabled/slordle.conf || true
+  - rm -f /etc/nginx/sites-enabled/default
+  - nginx -t
+  - systemctl restart nginx
+  - systemctl enable nginx
