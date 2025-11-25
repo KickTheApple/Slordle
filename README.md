@@ -33,7 +33,8 @@ Ob zagonu vagrant:
 
 ### V nginx directoriju pišemo v datoteko "slordle.conf"
 
-``` V datoteki povemo nginx kje se nahaja naš root in kje je naš začetek izvajanja.
+V datoteki povemo nginx kje se nahaja naš root in kje je naš začetek izvajanja.
+```
 root /home/ubuntu/Slordle/dist;
 index index.html;
 
@@ -41,7 +42,8 @@ location / {
     try_files $uri $uri/ /index.html;
 }
 ```
-``` Izvajanje Backenda na ražširitviji /api/ nastavimo na 8080 namesto 8443
+Izvajanje Backenda na ražširitviji /api/ nastavimo na 8080 namesto 8443
+``` 
 location /api/ {
     proxy_pass http://127.0.0.1:8080;
     proxy_set_header Host $host;
@@ -51,8 +53,9 @@ location /api/ {
 ### Backend - Java Spring boot strežnik
 [Service]
 Dostopen preko: http://localhost:8080/api/
+```sh
 ./gradlew bootRun &
-
+```
 ### Podatkovna baza - MariaDB, dostop preko
 ```sh
 jdbc:mariadb://localhost:3306/johnData
