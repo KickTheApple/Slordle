@@ -3,6 +3,7 @@ import {use, useEffect} from "react";
 import {useState} from "react";
 import Vrstica from "./vrstica.tsx";
 import Keyboard from "./keyboard.tsx";
+import ReactModal from "react-modal";
 
 interface Lawful {
     law: string[]
@@ -62,6 +63,16 @@ function checkLawfulness(listOfLaws: Lawful, guess: string): boolean {
     return false;
 }
 
+function overCheck(data: Colors): boolean {
+    for (let i = 0; i < data.colors.length; i++) {
+        if (data.colors[i] != 1) {
+            return false;
+        }
+    }
+    return true;
+
+}
+
 export default function Spiel(props : Prop) {
 
     const lineOfLines = [];
@@ -77,7 +88,13 @@ export default function Spiel(props : Prop) {
     const [ theWorlde, setTheWordle ] = useState(Array(6).fill(undefined).map(v => (Array(5).fill(undefined).map(u => ({content: "", state: 0})))));
     const [ keyboardIndex, setKeyboardIndex ] = useState(Array(27).fill(undefined).map((u, index) => ({content: "A B C Č D E F G H I J K L M N O P R S Š T U V Z Ž Enter Backspace".split(" ")[index], state: 0, status: false})));
 
+    const [ gameIsOver, setGameIsOver ] = useState(false);
+
     const keyPressRoutine = ( event: { key: string; }) => {
+        if (gameIsOver) {
+            return;
+        }
+
         if (event.key === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
             fetch('http://localhost:8080/api/GuessTest', {
                 method: 'POST',
@@ -93,6 +110,9 @@ export default function Spiel(props : Prop) {
             }).then(function (jsonData : Colors) {
                 for (let location = 0; location < 5; location++) {
                     theWorlde[linerLiner][location].state = jsonData.colors[location];
+                }
+                if (overCheck(jsonData)) {
+                    setGameIsOver(true);
                 }
                 setEyeLiner(0);
                 setLinerLiner(linerLiner + 1);
@@ -132,6 +152,10 @@ export default function Spiel(props : Prop) {
     })
 
     const obamna = () => {
+        if (gameIsOver) {
+            return;
+        }
+
         const foundPress: string = identifier(keyboardIndex);
         if (foundPress === "") {
             return
@@ -152,6 +176,9 @@ export default function Spiel(props : Prop) {
             }).then(function (jsonData : Colors) {
                 for (let location = 0; location < 5; location++) {
                     theWorlde[linerLiner][location].state = jsonData.colors[location];
+                }
+                if (overCheck(jsonData)) {
+                    setGameIsOver(true);
                 }
                 setEyeLiner(0);
                 setLinerLiner(linerLiner + 1);
