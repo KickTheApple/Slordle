@@ -4,12 +4,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 @RestController
-@CrossOrigin("http://localhost:5173")
+//@CrossOrigin("http://localhost:5173")
 public class SlordleRestController {
 
     public String theWorld = "BAKER";
     private final UserService service;
+    private final ArrayList<String> zbirkaBesed;
 
     enum Colors {
         WHITE,
@@ -27,9 +33,30 @@ public class SlordleRestController {
 
     SlordleRestController(UserService service) {
         this.service = service;
+        zbirkaBesed = fillingLegalWords("backend/src/main/java/com/github/kicktheapple/backend/sbsj.txt", 5);
     }
 
-    @GetMapping("/api/test")
+    public ArrayList<String> fillingLegalWords(String fileLocation, int length) {
+        ArrayList<String> zbirkovalec = new ArrayList<>();
+        File besede = new File(fileLocation);
+        try {
+            Scanner scBesed = new Scanner(besede);
+            while (scBesed.hasNext()) {
+                String currentWord = scBesed.nextLine();
+                if (currentWord.length() == length) {
+                    zbirkovalec.add(currentWord.toUpperCase());
+                    System.out.println(currentWord.toUpperCase());
+                }
+            }
+        } catch (Exception ignored) {}
+        return zbirkovalec;
+    }
+
+    public boolean legality(String guess) {
+        return zbirkaBesed.contains(guess);
+    }
+
+    @GetMapping("/api/health")
     public String getString() {
         return "Here's a string";
     }
@@ -68,6 +95,9 @@ public class SlordleRestController {
     @PostMapping("/api/GuessTest")
     public @ResponseBody Coloring requestHandling(@RequestBody Guess body) {
         Coloring colors = new Coloring(body.word.length());
+        if (legality(body.word)) {
+            colors.legal = true;
+        }
         for (int i = 0; i < body.word.length(); i++) {
             if (hardGuess(body.word.charAt(i), i)) {
                 colors.colors[i] = Colors.GREEN.ordinal();

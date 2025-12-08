@@ -5,12 +5,9 @@ import Vrstica from "./vrstica.tsx";
 import Keyboard from "./keyboard.tsx";
 import ReactModal from "react-modal";
 
-interface Lawful {
-    law: string[]
-}
-
 interface Colors {
-    colors: Array<number>
+    legal: boolean;
+    colors: Array<number>;
 }
 
 interface Elementek {
@@ -48,21 +45,6 @@ function identifier(keyboardIndex: Array<KeyState>) : string {
     return "";
 }
 
-function comparePromise(listOfValidWords: Promise<string[]>) : Lawful {
-    const laws: Lawful = { law: [""]};
-    listOfValidWords.then(validList => laws.law = validList)
-    return laws;
-}
-
-function checkLawfulness(listOfLaws: Lawful, guess: string): boolean {
-    for (let i = 0; i < listOfLaws.law.length; i++) {
-        if (listOfLaws.law[i] === guess) {
-            return true;
-        }
-    }
-    return false;
-}
-
 function overCheck(data: Colors): boolean {
     for (let i = 0; i < data.colors.length; i++) {
         if (data.colors[i] != 1) {
@@ -79,12 +61,6 @@ export default function Spiel(props : Prop) {
     const [ eyeLiner, setEyeLiner ] = useState(0);
     const [ linerLiner, setLinerLiner ] = useState(0);
 
-    const legalWords: Promise<string[]> = fetch("./frontend/sbsj.txt")
-        .then(r => r.text())
-        .then( lines => lines.split("\n")
-            .map(beseda => beseda.replace("\r", "").toUpperCase()).filter(beseda => beseda.length === 5));
-    const lawWordList : Lawful = comparePromise(legalWords);
-
     const [ theWorlde, setTheWordle ] = useState(Array(6).fill(undefined).map(v => (Array(5).fill(undefined).map(u => ({content: "", state: 0})))));
     const [ keyboardIndex, setKeyboardIndex ] = useState(Array(27).fill(undefined).map((u, index) => ({content: "A B C Č D E F G H I J K L M N O P R S Š T U V Z Ž Enter Backspace".split(" ")[index], state: 0, status: false})));
 
@@ -95,7 +71,7 @@ export default function Spiel(props : Prop) {
             return;
         }
 
-        if (event.key === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
+        if (event.key === "Enter" && eyeLiner >= 5) {
             fetch('http://localhost:8080/api/GuessTest', {
                 method: 'POST',
                 headers: {
@@ -108,6 +84,9 @@ export default function Spiel(props : Prop) {
             }).then(function (response: Response) {
                 return response.json();
             }).then(function (jsonData : Colors) {
+                if (!jsonData.legal) {
+                    return;
+                }
                 for (let location = 0; location < 5; location++) {
                     theWorlde[linerLiner][location].state = jsonData.colors[location];
                 }
@@ -132,7 +111,7 @@ export default function Spiel(props : Prop) {
                 setTheWordle(theWorldle => theWorldle.map((arr, i) =>
                     arr.map((item, j) => {
                         if (i === linerLiner && j === eyeLiner) {
-                            return { content: event.key, state: item.state }
+                            return { content: event.key.toUpperCase(), state: item.state }
                         }
                         return item;
                     })
@@ -161,7 +140,7 @@ export default function Spiel(props : Prop) {
             return
         }
 
-        if (foundPress === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
+        if (foundPress === "Enter" && eyeLiner >= 5) {
             fetch('http://localhost:8080/api/GuessTest', {
                 method: 'POST',
                 headers: {
@@ -174,6 +153,9 @@ export default function Spiel(props : Prop) {
             }).then(function (response: Response) {
                 return response.json();
             }).then(function (jsonData : Colors) {
+                if (!jsonData.legal) {
+                    return;
+                }
                 for (let location = 0; location < 5; location++) {
                     theWorlde[linerLiner][location].state = jsonData.colors[location];
                 }
@@ -222,7 +204,7 @@ export default function Spiel(props : Prop) {
     }
 
     return (
-        <div id={"container"}>
+        <div id={"container"}>r
             <div id={"panelContainer"}>
                 {lineOfLines}
             </div>
