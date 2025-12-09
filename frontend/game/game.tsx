@@ -4,6 +4,7 @@ import {useState} from "react";
 import Vrstica from "./vrstica.tsx";
 import Keyboard from "./keyboard.tsx";
 import ReactModal from "react-modal";
+import PostGamer from "./postGameScreen.tsx";
 
 interface Colors {
     legal: boolean;
@@ -66,6 +67,8 @@ export default function Spiel(props : Prop) {
 
     const [ gameIsOver, setGameIsOver ] = useState(false);
 
+    const [ postGamusHandlerus, setPostGamusHandlerus] = useState(false);
+
     const keyPressRoutine = ( event: { key: string; }) => {
         if (gameIsOver) {
             return;
@@ -92,6 +95,7 @@ export default function Spiel(props : Prop) {
                 }
                 if (overCheck(jsonData)) {
                     setGameIsOver(true);
+                    setPostGamusHandlerus(true);
                 }
                 setEyeLiner(0);
                 setLinerLiner(linerLiner + 1);
@@ -161,6 +165,7 @@ export default function Spiel(props : Prop) {
                 }
                 if (overCheck(jsonData)) {
                     setGameIsOver(true);
+                    setPostGamusHandlerus(true);
                 }
                 setEyeLiner(0);
                 setLinerLiner(linerLiner + 1);
@@ -209,6 +214,7 @@ export default function Spiel(props : Prop) {
                 {lineOfLines}
             </div>
             <Keyboard key={"k"} keysOnBoard={keyboardIndex} />
+            <PostGamer statusus={postGamusHandlerus} funkcios={() => {setPostGamusHandlerus(false)}} />
         </div>
     );
 

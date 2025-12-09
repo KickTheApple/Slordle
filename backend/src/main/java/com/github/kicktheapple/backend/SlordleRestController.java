@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 @RestController
-//@CrossOrigin("http://localhost:5173")
+@CrossOrigin("http://localhost:5173")
 public class SlordleRestController {
 
     public String theWorld = "BAKER";
@@ -98,11 +98,12 @@ public class SlordleRestController {
         if (legality(body.word)) {
             colors.legal = true;
         }
+        boolean[] hasBeenUsedArray = new boolean[theWorld.length()];
         for (int i = 0; i < body.word.length(); i++) {
             if (hardGuess(body.word.charAt(i), i)) {
                 colors.colors[i] = Colors.GREEN.ordinal();
             } else {
-                if (softGuess(body.word.charAt(i), body.word)) {
+                if (softGuess(body.word.charAt(i), body.word, hasBeenUsedArray)) {
                     colors.colors[i] = Colors.YELLOW.ordinal();
                 } else {
                     colors.colors[i] = Colors.GRAY.ordinal();
@@ -112,9 +113,10 @@ public class SlordleRestController {
         return colors;
     }
 
-    public boolean softGuess(char letter, String guess) {
+    public boolean softGuess(char letter, String guess, boolean[] hasBeenUsedArray) {
         for (int i = 0; i < guess.length(); i++) {
-            if (letter == theWorld.charAt(i) && theWorld.charAt(i) != guess.charAt(i)) {
+            if (letter == theWorld.charAt(i) && !hasBeenUsedArray[i] && theWorld.charAt(i) != guess.charAt(i)) {
+                hasBeenUsedArray[i] = true;
                 return true;
             }
         }
