@@ -3,13 +3,12 @@ import {use, useEffect} from "react";
 import {useState} from "react";
 import Vrstica from "./vrstica.tsx";
 import Keyboard from "./keyboard.tsx";
-
-interface Lawful {
-    law: string[]
-}
+import ReactModal from "react-modal";
+import PostGamer from "./postGameScreen.tsx";
 
 interface Colors {
-    colors: Array<number>
+    legal: boolean;
+    colors: Array<number>;
 }
 
 interface Elementek {
@@ -47,19 +46,14 @@ function identifier(keyboardIndex: Array<KeyState>) : string {
     return "";
 }
 
-function comparePromise(listOfValidWords: Promise<string[]>) : Lawful {
-    const laws: Lawful = { law: [""]};
-    listOfValidWords.then(validList => laws.law = validList)
-    return laws;
-}
-
-function checkLawfulness(listOfLaws: Lawful, guess: string): boolean {
-    for (let i = 0; i < listOfLaws.law.length; i++) {
-        if (listOfLaws.law[i] === guess) {
-            return true;
+function overCheck(data: Colors): boolean {
+    for (let i = 0; i < data.colors.length; i++) {
+        if (data.colors[i] != 1) {
+            return false;
         }
     }
-    return false;
+    return true;
+
 }
 
 export default function Spiel(props : Prop) {
@@ -68,17 +62,19 @@ export default function Spiel(props : Prop) {
     const [ eyeLiner, setEyeLiner ] = useState(0);
     const [ linerLiner, setLinerLiner ] = useState(0);
 
-    const legalWords: Promise<string[]> = fetch("./frontend/sbsj.txt")
-        .then(r => r.text())
-        .then( lines => lines.split("\n")
-            .map(beseda => beseda.replace("\r", "").toUpperCase()).filter(beseda => beseda.length === 5));
-    const lawWordList : Lawful = comparePromise(legalWords);
-
     const [ theWorlde, setTheWordle ] = useState(Array(6).fill(undefined).map(v => (Array(5).fill(undefined).map(u => ({content: "", state: 0})))));
     const [ keyboardIndex, setKeyboardIndex ] = useState(Array(27).fill(undefined).map((u, index) => ({content: "A B C Č D E F G H I J K L M N O P R S Š T U V Z Ž Enter Backspace".split(" ")[index], state: 0, status: false})));
 
+    const [ gameIsOver, setGameIsOver ] = useState(false);
+
+    const [ postGamusHandlerus, setPostGamusHandlerus] = useState(false);
+
     const keyPressRoutine = ( event: { key: string; }) => {
-        if (event.key === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
+        if (gameIsOver) {
+            return;
+        }
+
+        if (event.key === "Enter" && eyeLiner >= 5) {
             fetch('http://localhost:8080/api/GuessTest', {
                 method: 'POST',
                 headers: {
@@ -91,8 +87,15 @@ export default function Spiel(props : Prop) {
             }).then(function (response: Response) {
                 return response.json();
             }).then(function (jsonData : Colors) {
+                if (!jsonData.legal) {
+                    return;
+                }
                 for (let location = 0; location < 5; location++) {
                     theWorlde[linerLiner][location].state = jsonData.colors[location];
+                }
+                if (overCheck(jsonData)) {
+                    setGameIsOver(true);
+                    setPostGamusHandlerus(true);
                 }
                 setEyeLiner(0);
                 setLinerLiner(linerLiner + 1);
@@ -112,7 +115,7 @@ export default function Spiel(props : Prop) {
                 setTheWordle(theWorldle => theWorldle.map((arr, i) =>
                     arr.map((item, j) => {
                         if (i === linerLiner && j === eyeLiner) {
-                            return { content: event.key, state: item.state }
+                            return { content: event.key.toUpperCase(), state: item.state }
                         }
                         return item;
                     })
@@ -132,12 +135,16 @@ export default function Spiel(props : Prop) {
     })
 
     const obamna = () => {
+        if (gameIsOver) {
+            return;
+        }
+
         const foundPress: string = identifier(keyboardIndex);
         if (foundPress === "") {
             return
         }
 
-        if (foundPress === "Enter" && eyeLiner >= 5 && checkLawfulness(lawWordList, WordMaker(theWorlde[linerLiner]))) {
+        if (foundPress === "Enter" && eyeLiner >= 5) {
             fetch('http://localhost:8080/api/GuessTest', {
                 method: 'POST',
                 headers: {
@@ -150,8 +157,15 @@ export default function Spiel(props : Prop) {
             }).then(function (response: Response) {
                 return response.json();
             }).then(function (jsonData : Colors) {
+                if (!jsonData.legal) {
+                    return;
+                }
                 for (let location = 0; location < 5; location++) {
                     theWorlde[linerLiner][location].state = jsonData.colors[location];
+                }
+                if (overCheck(jsonData)) {
+                    setGameIsOver(true);
+                    setPostGamusHandlerus(true);
                 }
                 setEyeLiner(0);
                 setLinerLiner(linerLiner + 1);
@@ -195,11 +209,12 @@ export default function Spiel(props : Prop) {
     }
 
     return (
-        <div id={"container"}>
+        <div id={"container"}>r
             <div id={"panelContainer"}>
                 {lineOfLines}
             </div>
             <Keyboard key={"k"} keysOnBoard={keyboardIndex} />
+            <PostGamer statusus={postGamusHandlerus} funkcios={() => {setPostGamusHandlerus(false)}} />
         </div>
     );
 

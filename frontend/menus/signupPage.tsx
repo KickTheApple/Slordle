@@ -3,9 +3,9 @@ import { useState } from "react";
 import { InputText } from "primereact/inputtext"
 
 interface ValidityResponse {
-    userState: number;
-    passState: number;
-    genState: boolean;
+    usernameStatus: number;
+    passwordStatus: number;
+    generalStatus: boolean;
 }
 
 function SignupPage() {
@@ -31,14 +31,13 @@ function SignupPage() {
         }).then(function (response: Response) {
             return response.json();
         }).then(function (jsonData : ValidityResponse) {
-            console.log(jsonData);
-            if (jsonData.userState !== 0) {
+            if (jsonData.usernameStatus !== 0) {
                 setUserAbled(true);
             }
-            if (jsonData.passState !== 0) {
+            if (jsonData.passwordStatus !== 0) {
                 setPassAbled(true);
             }
-            if (jsonData.genState) {
+            if (!jsonData.generalStatus) {
                 window.location.replace("http://localhost:5173")
             }
         });
