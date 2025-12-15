@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 @RestController
@@ -59,6 +60,14 @@ public class SlordleRestController {
     @GetMapping("/api/health")
     public String getString() {
         return "Here's a string";
+    }
+
+    @GetMapping("/api/generateWord")
+    public @ResponseBody Word generateWord() {
+        Random random = new Random();
+        Word wordler = new Word();
+        wordler.beseda = zbirkaBesed.get(random.nextInt(zbirkaBesed.size()));
+        return wordler;
     }
 
     @PostMapping("/api/AddUser")

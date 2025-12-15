@@ -4,6 +4,7 @@ import "./postGameScreen.css"
 interface postusGamus {
     statusus: boolean;
     funkcios: () => void;
+    condicio: boolean;
 }
 
 function PostGamer(prop : postusGamus) {
@@ -14,7 +15,7 @@ function PostGamer(prop : postusGamus) {
     return (
         <div id={"endGame_Container"} className={"fade-in"}>
             <div id={"endGame_Text"}>
-                <p>Zmagovalec si!</p>
+                <p>{prop.condicio ? "Zmagovalec si!" : "Poraženec si"}</p>
             </div>
             <div id={"endGame_Functionality"}>
                 <button onClick={prop.funkcios}>Zapri</button>
