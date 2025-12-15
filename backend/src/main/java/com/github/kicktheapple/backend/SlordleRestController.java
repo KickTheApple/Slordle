@@ -11,7 +11,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 @RestController
-@CrossOrigin("http://localhost:5173")
+
+
 public class SlordleRestController {
 
     public String theWorld = "BAKER";
@@ -25,7 +26,7 @@ public class SlordleRestController {
         GRAY
     }
 
-    enum addingResponses {
+    enum dataResponses {
         SUCCESS,
         EXISTS,
         SHORT,
@@ -35,6 +36,7 @@ public class SlordleRestController {
     SlordleRestController(UserService service) {
         this.service = service;
         zbirkaBesed = fillingLegalWords("backend/src/main/java/com/github/kicktheapple/backend/sbsj.txt", 5);
+        setSlordle();
     }
 
     public ArrayList<String> fillingLegalWords(String fileLocation, int length) {
@@ -70,26 +72,31 @@ public class SlordleRestController {
         return wordler;
     }
 
+    private void setSlordle() {
+        Random random = new Random();
+        theWorld = zbirkaBesed.get(random.nextInt(zbirkaBesed.size()));
+    }
+
     @PostMapping("/api/AddUser")
     public @ResponseBody InputStates userAddition(@RequestBody UserForm userForm) {
         InputStates states = new InputStates();
         if (service.getUserByUsername(userForm.username) != null) {
-            states.usernameStatus = addingResponses.EXISTS.ordinal();
+            states.usernameStatus = dataResponses.EXISTS.ordinal();
             states.generalStatus = true;
         }
         if (userForm.username.length() < 5) {
-            states.usernameStatus = addingResponses.SHORT.ordinal();
+            states.usernameStatus = dataResponses.SHORT.ordinal();
             states.generalStatus = true;
         }
         if (userForm.password.length() < 5) {
-            states.passwordStatus = addingResponses.SHORT.ordinal();
+            states.passwordStatus = dataResponses.SHORT.ordinal();
             states.generalStatus = true;
         }
         if (userForm.username.isEmpty()) {
-            states.usernameStatus = addingResponses.EMPTY.ordinal();
+            states.usernameStatus = dataResponses.EMPTY.ordinal();
         }
         if (userForm.password.isEmpty()) {
-            states.passwordStatus = addingResponses.EMPTY.ordinal();
+            states.passwordStatus = dataResponses.EMPTY.ordinal();
         }
         if (states.generalStatus) {
             return states;
@@ -98,6 +105,25 @@ public class SlordleRestController {
         data.setUsername(userForm.username);
         data.setPassword(userForm.password);
         service.createUser(data);
+        return states;
+    }
+
+    @PostMapping("/api/CheckUser")
+    public @ResponseBody InputStates userCheckington(@RequestBody UserForm userForm) {
+        InputStates states = new InputStates();
+        if (userForm.username.isEmpty()) {
+            states.usernameStatus = dataResponses.EMPTY.ordinal();
+            states.generalStatus = true;
+        }
+        if (userForm.password.isEmpty()) {
+            states.passwordStatus = dataResponses.EMPTY.ordinal();
+            states.generalStatus = true;
+        }
+        if (service.getUserByUsername(userForm.username) == null || !service.getUserByUsername(userForm.username).checkPassword(userForm.password)) {
+            states.usernameStatus = dataResponses.EXISTS.ordinal();
+            states.passwordStatus = dataResponses.EXISTS.ordinal();
+            states.generalStatus = true;
+        }
         return states;
     }
 

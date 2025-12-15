@@ -85,7 +85,20 @@ function ReplacerOfUseStateWithStatus(setTheWordle:  Dispatch<SetStateAction<Slo
         })
     ));
 }
+/*
+function KeyFinder(keyBoardIndex: Array<KeyState>, value: string) : number {
+    for (let x = 0; x < KeyBoardIndex.length; x++) {
+        if (keyBoardIndex[x].content === value) {
+            return x;
+        }
+    }
+    return -1;
+}
 
+function ReplacerOfKeysByState(SetKeyBoardIndex: Dispatch<SetStateAction<KeyState[]>>, index: number, value: number) {
+    SetKeyBoardIndex(keyBoardI)
+}
+*/
 export default function Spiel(props : Prop) {
 
     const lineOfLines = [];
@@ -117,6 +130,7 @@ export default function Spiel(props : Prop) {
             }
             for (let location = 0; location < 5; location++) {
                 ReplacerOfUseStateWithStatus(setTheWordle, linerLiner, location, jsonData.colors[location]);
+                //let foundIndex = KeyFinder(keyboardIndex, theWorlde[linerLiner][location].content);
             }
             if (winCheck(jsonData)) {
                 setGameIsOver(true);
