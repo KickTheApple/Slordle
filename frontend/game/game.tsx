@@ -85,7 +85,7 @@ function ReplacerOfUseStateWithStatus(setTheWordle:  Dispatch<SetStateAction<Slo
         })
     ));
 }
-/*
+
 function KeyFinder(keyBoardIndex: Array<KeyState>, value: string) : number {
     for (let x = 0; x < KeyBoardIndex.length; x++) {
         if (keyBoardIndex[x].content === value) {
@@ -98,7 +98,7 @@ function KeyFinder(keyBoardIndex: Array<KeyState>, value: string) : number {
 function ReplacerOfKeysByState(SetKeyBoardIndex: Dispatch<SetStateAction<KeyState[]>>, index: number, value: number) {
     SetKeyBoardIndex(keyBoardI)
 }
-*/
+
 export default function Spiel(props : Prop) {
 
     const lineOfLines = [];
@@ -209,7 +209,13 @@ export default function Spiel(props : Prop) {
     }
 
     return (
-        <div id={"container"}>r
+        <div id={"container"}>
+            <ul>
+                <li><a href={"http://localhost:5173"}><img src={"../frontend/home-7-xxl.png"} alt={""} /></a></li>
+                <li><h2>SLORDLE</h2></li>
+                <li><img src={"../frontend/user-xxl.png"} alt={""} /></li>
+            </ul>
+
             <div id={"panelContainer"}>
                 {lineOfLines}
             </div>

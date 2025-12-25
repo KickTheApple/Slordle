@@ -1,6 +1,10 @@
 package com.github.kicktheapple.backend;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +18,9 @@ import java.util.Scanner;
 
 
 public class SlordleRestController {
+
+    private JwtService jwtService;
+    private AuthenticationManager authenticationManager;
 
     public String theWorld = "BAKER";
     private final UserService service;
@@ -125,6 +132,18 @@ public class SlordleRestController {
             states.generalStatus = true;
         }
         return states;
+    }
+
+    @PostMapping("/api/generateToken")
+    public String authenticateAndGetToken(@RequestBody UserForm authRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authRequest.username, authRequest.password)
+        );
+        if (authentication.isAuthenticated()) {
+            return jwtService.generateToken(authRequest.username);
+        } else {
+            throw new UsernameNotFoundException("Invalid user request!");
+        }
     }
 
     @PostMapping("/api/GuessTest")
