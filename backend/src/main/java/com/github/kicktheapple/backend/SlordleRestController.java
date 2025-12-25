@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -42,15 +43,17 @@ public class SlordleRestController {
 
     SlordleRestController(UserService service) {
         this.service = service;
-        zbirkaBesed = fillingLegalWords("backend/src/main/java/com/github/kicktheapple/backend/sbsj.txt", 5);
+        zbirkaBesed = fillingLegalWords("sbsj.txt", 5);
         setSlordle();
     }
 
     public ArrayList<String> fillingLegalWords(String fileLocation, int length) {
         ArrayList<String> zbirkovalec = new ArrayList<>();
         File besede = new File(fileLocation);
+        System.out.println("Exists: " + besede.exists());
+        System.out.println("Size: " + besede.length());
         try {
-            Scanner scBesed = new Scanner(besede);
+            Scanner scBesed = new Scanner(besede, StandardCharsets.UTF_8);
             while (scBesed.hasNext()) {
                 String currentWord = scBesed.nextLine();
                 if (currentWord.length() == length) {
@@ -58,7 +61,9 @@ public class SlordleRestController {
                     System.out.println(currentWord.toUpperCase());
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return zbirkovalec;
     }
 
