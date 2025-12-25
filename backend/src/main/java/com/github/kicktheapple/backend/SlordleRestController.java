@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -47,12 +49,13 @@ public class SlordleRestController {
         setSlordle();
     }
 
-    public ArrayList<String> fillingLegalWords(String fileLocation, int length) {
+    public ArrayList<String> fillingLegalWords(String fileName, int length) {
         ArrayList<String> zbirkovalec = new ArrayList<>();
-        File besede = new File(fileLocation);
-        System.out.println("Exists: " + besede.exists());
-        System.out.println("Size: " + besede.length());
+        InputStream besede = getClass().getClassLoader().getResourceAsStream(fileName);
         try {
+            if (besede == null) {
+                throw new FileNotFoundException("Resource not found: sbsj.txt");
+            }
             Scanner scBesed = new Scanner(besede, StandardCharsets.UTF_8);
             while (scBesed.hasNext()) {
                 String currentWord = scBesed.nextLine();
