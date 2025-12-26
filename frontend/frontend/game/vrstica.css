@@ -1,0 +1,10 @@
+#row {
+    padding: 5px;
+    background-color: #121212;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    width: 100%;
+    gap: 8px;
+}

@@ -1,0 +1,14 @@
+#element {
+    padding: 30px;
+    background-color: #121212;
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    border: 2px solid gray
+}

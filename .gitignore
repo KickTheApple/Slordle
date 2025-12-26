@@ -1,0 +1,6 @@
+# Frontend (Node modules)
+frontend/node_modules/
+
+# Docker environment file (contains passwords)
+docker/.env
+
