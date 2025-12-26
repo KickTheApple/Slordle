@@ -61,7 +61,7 @@ public class SlordleRestController {
                 String currentWord = scBesed.nextLine();
                 if (currentWord.length() == length) {
                     zbirkovalec.add(currentWord.toUpperCase());
-                    System.out.println(currentWord.toUpperCase());
+                    //System.out.println(currentWord.toUpperCase()); // if this shit is uncommented it takes a trillion years to start the container holy shit
                 }
             }
         } catch (Exception e) {
