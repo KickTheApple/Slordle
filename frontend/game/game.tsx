@@ -87,7 +87,7 @@ function ReplacerOfUseStateWithStatus(setTheWordle:  Dispatch<SetStateAction<Slo
 }
 
 function KeyFinder(keyBoardIndex: Array<KeyState>, value: string) : number {
-    for (let x = 0; x < KeyBoardIndex.length; x++) {
+    for (let x = 0; x < keyBoardIndex.length; x++) {
         if (keyBoardIndex[x].content === value) {
             return x;
         }
@@ -95,9 +95,9 @@ function KeyFinder(keyBoardIndex: Array<KeyState>, value: string) : number {
     return -1;
 }
 
-function ReplacerOfKeysByState(SetKeyBoardIndex: Dispatch<SetStateAction<KeyState[]>>, index: number, value: number) {
-    SetKeyBoardIndex(keyBoardI)
-}
+//function ReplacerOfKeysByState(SetKeyBoardIndex: Dispatch<SetStateAction<KeyState[]>>, index: number, value: number) {
+//    SetKeyBoardIndex(keyBoardI)
+//}
 
 export default function Spiel(props : Prop) {
 
