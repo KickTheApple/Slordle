@@ -7,12 +7,12 @@ chmod +x backend/gradlew
 
 FIRST-TIME CERTIFICATE GENERATION (pre build):
 ```sh
-docker run --rm -it \
-  -v {full path to here}/nginx/certs:/etc/letsencrypt \
+sudo docker run --rm -it --network host \
+  -v /full/path/to/nginx/certs:/etc/letsencrypt \
   certbot/certbot certonly \
   --standalone \
   --preferred-challenges http \
-  -d (example_domain.com)
+  -d (example-domain.com)
 ```
 Replace the DOMAIN_NAME in nginx.conf with the domain used by the server.
 
