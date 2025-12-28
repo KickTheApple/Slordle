@@ -1,7 +1,18 @@
 # Docker project structure for slordle
 
-Should build and start correctly with `docker compose up --build -d`
-
-
 FOR BACKEND ON LINUX:
-`chmod +x backend/gradlew`
+```sh
+chmod +x backend/gradlew
+```
+
+FIRST-TIME CERTIFICATE GENERATION (pre build):
+```sh
+docker run --rm -it \
+  -v $(pwd)/nginx/certs:/etc/letsencrypt \
+  certbot/certbot certonly \
+  --standalone \
+  --preferred-challenges http \
+  -d (example_domain.com)
+```
+
+Should build and start correctly with `docker compose up --build -d`

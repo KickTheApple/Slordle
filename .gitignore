@@ -1,3 +1,6 @@
+# secrets
+/nginx/certs
+
 # Frontend (Node modules)
 frontend/node_modules/
 
