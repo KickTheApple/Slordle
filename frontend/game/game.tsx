@@ -113,7 +113,7 @@ export default function Spiel(props : Prop) {
     const [ postGamusHandlerus, setPostGamusHandlerus] = useState(false);
 
     const guessFetch : () => void = () => {
-        fetch('http://localhost:8080/api/GuessTest', {
+        fetch('/api/GuessTest', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -211,7 +211,7 @@ export default function Spiel(props : Prop) {
     return (
         <div id={"container"}>
             <ul>
-                <li><a href={"http://localhost:5173"}><img src={"../frontend/home-7-xxl.png"} alt={""} /></a></li>
+                <li><a href={"/"}><img src={"../frontend/home-7-xxl.png"} alt={""} /></a></li>
                 <li><h2>SLORDLE</h2></li>
                 <li><img src={"../frontend/user-xxl.png"} alt={""} /></li>
             </ul>

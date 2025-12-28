@@ -16,11 +16,11 @@ function Menu(prop : Maneur) {
     };
 
     const redirectorSignup = () => {
-        window.location.href = "http://localhost:5173/signup";
+        window.location.href = "/signup";
     }
 
     const redirectorLogin = () => {
-        window.location.href = "http://localhost:5173/login";
+        window.location.href = "/login";
     }
 
     return (
