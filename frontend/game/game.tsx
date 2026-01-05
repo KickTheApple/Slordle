@@ -1,4 +1,6 @@
 import "./game.css"
+import homeImage from "../home-7-xxl.png"
+import userImage from "../user-xxl.png"
 import {type Dispatch, type SetStateAction, useEffect} from "react";
 import {useState} from "react";
 import Vrstica from "./vrstica.tsx";
@@ -217,9 +219,9 @@ export default function Spiel(props : Prop) {
     return (
         <div id={"container"}>
             <ul>
-                <li><a href={"/"}><img src={"../frontend/home-7-xxl.png"} alt={""} /></a></li>
+                <li><a href={"/"}><img src={homeImage} alt={""} /></a></li>
                 <li><h2>SLORDLE</h2></li>
-                <li><img src={"../frontend/user-xxl.png"} alt={""} /></li>
+                <li><img src={userImage} alt={""} /></li>
             </ul>
 
             <div id={"panelContainer"}>
