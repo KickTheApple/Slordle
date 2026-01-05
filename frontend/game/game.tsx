@@ -95,9 +95,14 @@ function KeyFinder(keyBoardIndex: Array<KeyState>, value: string) : number {
     return -1;
 }
 
-//function ReplacerOfKeysByState(SetKeyBoardIndex: Dispatch<SetStateAction<KeyState[]>>, index: number, value: number) {
-//    SetKeyBoardIndex(keyBoardI)
-//}
+function ReplacerOfKeysByState(setKeyBoardIndex: Dispatch<SetStateAction<KeyState[]>>, index: number, statler: number) {
+    setKeyBoardIndex(bordler => bordler.map((bordlus, i) => {
+        if (i === index && (bordlus.state == 0 || bordlus.state > statler)) {
+            return { content: bordlus.content, state: statler, status: bordlus.status}
+        }
+        return bordlus
+    }))
+}
 
 export default function Spiel(props : Prop) {
 
@@ -130,6 +135,7 @@ export default function Spiel(props : Prop) {
             }
             for (let location = 0; location < 5; location++) {
                 ReplacerOfUseStateWithStatus(setTheWordle, linerLiner, location, jsonData.colors[location]);
+                ReplacerOfKeysByState(setKeyboardIndex, KeyFinder(keyboardIndex, theWorlde[linerLiner][location].content), jsonData.colors[location]);
                 //let foundIndex = KeyFinder(keyboardIndex, theWorlde[linerLiner][location].content);
             }
             if (winCheck(jsonData)) {
