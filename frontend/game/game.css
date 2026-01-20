@@ -3,3 +3,28 @@
     padding: 10px;
 
 }
+
+li h2 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #ffffff;
+    cursor: default;
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 0;
+}
+
+
+ul img {
+    height: 2em;
+    width: auto;
+}

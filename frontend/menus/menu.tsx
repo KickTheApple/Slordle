@@ -1,4 +1,5 @@
 import "./menu.css"
+import logo from "../wordle2.png"
 import type {Dispatch, SetStateAction} from "react";
 
 interface Maneur {
@@ -16,17 +17,17 @@ function Menu(prop : Maneur) {
     };
 
     const redirectorSignup = () => {
-        window.location.href = "http://localhost:5173/signup";
+        window.location.href = "/signup";
     }
 
     const redirectorLogin = () => {
-        window.location.href = "http://localhost:5173/login";
+        window.location.href = "/login";
     }
 
     return (
         <div id={"menu-container"}>
             <div id={"upper-text-group"}>
-                <img src="../../frontend/wordle2.png" alt={""} />
+                <img src={logo} alt={""} />
                 <h2 id={"thingTitle"}>Slordle</h2>
                 <p id={"descriptor"}></p>
                 <p id={"descriptor"}></p>

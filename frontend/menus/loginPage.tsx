@@ -26,7 +26,7 @@ function LoginPage() {
                 </div>
                 <div id={"sign_confirmation"}>
                     <button>Check</button>
-                    <p>If you don't have an account <a href="http://localhost:5173/signup" target="_self">Signup</a></p>
+                    <p>If you don't have an account <a href="/signup" target="_self">Signup</a></p>
                 </div>
             </div>
         </>

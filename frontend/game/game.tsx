@@ -1,9 +1,10 @@
 import "./game.css"
-import {use, useEffect} from "react";
+import homeImage from "../home-7-xxl.png"
+import userImage from "../user-xxl.png"
+import {type Dispatch, type SetStateAction, useEffect} from "react";
 import {useState} from "react";
 import Vrstica from "./vrstica.tsx";
 import Keyboard from "./keyboard.tsx";
-import ReactModal from "react-modal";
 import PostGamer from "./postGameScreen.tsx";
 
 interface Colors {
@@ -26,6 +27,15 @@ interface KeyState {
     status : boolean;
 }
 
+class Slordle {
+    public content: string;
+    public state: number;
+    constructor() {
+        this.content = "";
+        this.state = 0;
+    }
+}
+
 function WordMaker(guess : Array<Elementek>) : string {
 
     let beseda : string = "";
@@ -46,7 +56,7 @@ function identifier(keyboardIndex: Array<KeyState>) : string {
     return "";
 }
 
-function overCheck(data: Colors): boolean {
+function winCheck(data: Colors): boolean {
     for (let i = 0; i < data.colors.length; i++) {
         if (data.colors[i] != 1) {
             return false;
@@ -54,6 +64,46 @@ function overCheck(data: Colors): boolean {
     }
     return true;
 
+}
+
+function ReplacerOfUseStateWithString(setTheWordle:  Dispatch<SetStateAction<Slordle[][]>>, linerLiner: number, eyeLiner: number, value: string) {
+    setTheWordle(theWorldle => theWorldle.map((arr, i) =>
+        arr.map((item, j) => {
+            if (i === linerLiner && j === eyeLiner) {
+                return { content: value, state: item.state }
+            }
+            return item;
+        })
+    ));
+}
+
+function ReplacerOfUseStateWithStatus(setTheWordle:  Dispatch<SetStateAction<Slordle[][]>>, linerLiner: number, eyeLiner: number, value: number) {
+    setTheWordle(theWorldle => theWorldle.map((arr, i) =>
+        arr.map((item, j) => {
+            if (i === linerLiner && j === eyeLiner) {
+                return { content: item.content, state: value }
+            }
+            return item;
+        })
+    ));
+}
+
+function KeyFinder(keyBoardIndex: Array<KeyState>, value: string) : number {
+    for (let x = 0; x < keyBoardIndex.length; x++) {
+        if (keyBoardIndex[x].content === value) {
+            return x;
+        }
+    }
+    return -1;
+}
+
+function ReplacerOfKeysByState(setKeyBoardIndex: Dispatch<SetStateAction<KeyState[]>>, index: number, statler: number) {
+    setKeyBoardIndex(bordler => bordler.map((bordlus, i) => {
+        if (i === index && (bordlus.state == 0 || bordlus.state > statler)) {
+            return { content: bordlus.content, state: statler, status: bordlus.status}
+        }
+        return bordlus
+    }))
 }
 
 export default function Spiel(props : Prop) {
@@ -66,8 +116,42 @@ export default function Spiel(props : Prop) {
     const [ keyboardIndex, setKeyboardIndex ] = useState(Array(27).fill(undefined).map((u, index) => ({content: "A B C Č D E F G H I J K L M N O P R S Š T U V Z Ž Enter Backspace".split(" ")[index], state: 0, status: false})));
 
     const [ gameIsOver, setGameIsOver ] = useState(false);
-
+    const [ areWeWinning, setAreWeWinning ] = useState(false);
     const [ postGamusHandlerus, setPostGamusHandlerus] = useState(false);
+
+    const guessFetch : () => void = () => {
+        fetch('/api/GuessTest', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                word: WordMaker(theWorlde[linerLiner]),
+            }),
+        }).then(function (response: Response) {
+            return response.json();
+        }).then(function (jsonData : Colors) {
+            if (!jsonData.legal) {
+                return;
+            }
+            for (let location = 0; location < 5; location++) {
+                ReplacerOfUseStateWithStatus(setTheWordle, linerLiner, location, jsonData.colors[location]);
+                ReplacerOfKeysByState(setKeyboardIndex, KeyFinder(keyboardIndex, theWorlde[linerLiner][location].content), jsonData.colors[location]);
+                //let foundIndex = KeyFinder(keyboardIndex, theWorlde[linerLiner][location].content);
+            }
+            if (winCheck(jsonData)) {
+                setGameIsOver(true);
+                setAreWeWinning(true);
+                setPostGamusHandlerus(true);
+            } else if (linerLiner == theWorlde.length-1) {
+                setGameIsOver(true);
+                setPostGamusHandlerus(true)
+            }
+            setEyeLiner(0);
+            setLinerLiner(linerLiner + 1);
+        });
+    }
 
     const keyPressRoutine = ( event: { key: string; }) => {
         if (gameIsOver) {
@@ -75,56 +159,18 @@ export default function Spiel(props : Prop) {
         }
 
         if (event.key === "Enter" && eyeLiner >= 5) {
-            fetch('http://localhost:8080/api/GuessTest', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    word: WordMaker(theWorlde[linerLiner]),
-                }),
-            }).then(function (response: Response) {
-                return response.json();
-            }).then(function (jsonData : Colors) {
-                if (!jsonData.legal) {
-                    return;
-                }
-                for (let location = 0; location < 5; location++) {
-                    theWorlde[linerLiner][location].state = jsonData.colors[location];
-                }
-                if (overCheck(jsonData)) {
-                    setGameIsOver(true);
-                    setPostGamusHandlerus(true);
-                }
-                setEyeLiner(0);
-                setLinerLiner(linerLiner + 1);
-            });
+            guessFetch();
         } else {
             if (event.key === "Backspace" && eyeLiner > 0) {
-                setTheWordle(theWorldle => theWorldle.map((arr, i) =>
-                    arr.map((item, j) => {
-                        if (i === linerLiner && j === eyeLiner-1) {
-                            return { content: "", state: item.state }
-                        }
-                        return item;
-                    })
-                ));
+                ReplacerOfUseStateWithString(setTheWordle, linerLiner, eyeLiner-1, "");
                 setEyeLiner(eyeLiner - 1);
             } else if (eyeLiner < 5 && event.key.length === 1) {
-                setTheWordle(theWorldle => theWorldle.map((arr, i) =>
-                    arr.map((item, j) => {
-                        if (i === linerLiner && j === eyeLiner) {
-                            return { content: event.key.toUpperCase(), state: item.state }
-                        }
-                        return item;
-                    })
-                ));
+                ReplacerOfUseStateWithString(setTheWordle, linerLiner, eyeLiner, event.key.toUpperCase());
                 setEyeLiner(eyeLiner + 1);
             }
         }
-        console.log(eyeLiner)
-        console.log(theWorlde)
+        console.log(eyeLiner);
+        console.log(theWorlde);
     }
 
     useEffect(() => {
@@ -134,7 +180,7 @@ export default function Spiel(props : Prop) {
         };
     })
 
-    const obamna = () => {
+    const buttonPressRoutine = () => {
         if (gameIsOver) {
             return;
         }
@@ -145,51 +191,13 @@ export default function Spiel(props : Prop) {
         }
 
         if (foundPress === "Enter" && eyeLiner >= 5) {
-            fetch('http://localhost:8080/api/GuessTest', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    word: WordMaker(theWorlde[linerLiner]),
-                }),
-            }).then(function (response: Response) {
-                return response.json();
-            }).then(function (jsonData : Colors) {
-                if (!jsonData.legal) {
-                    return;
-                }
-                for (let location = 0; location < 5; location++) {
-                    theWorlde[linerLiner][location].state = jsonData.colors[location];
-                }
-                if (overCheck(jsonData)) {
-                    setGameIsOver(true);
-                    setPostGamusHandlerus(true);
-                }
-                setEyeLiner(0);
-                setLinerLiner(linerLiner + 1);
-            });
+            guessFetch();
         } else {
             if (foundPress === "Backspace" && eyeLiner > 0) {
-                setTheWordle(theWorldle => theWorldle.map((arr, i) =>
-                    arr.map((item, j) => {
-                        if (i === linerLiner && j === eyeLiner-1) {
-                            return { content: "", state: item.state }
-                        }
-                        return item;
-                    })
-                ));
+                ReplacerOfUseStateWithString(setTheWordle, linerLiner, eyeLiner-1, "");
                 setEyeLiner(eyeLiner - 1);
             } else if (eyeLiner < 5 && foundPress.length === 1) {
-                setTheWordle(theWorldle => theWorldle.map((arr, i) =>
-                    arr.map((item, j) => {
-                        if (i === linerLiner && j === eyeLiner) {
-                            return { content: foundPress, state: item.state }
-                        }
-                        return item;
-                    })
-                ));
+                ReplacerOfUseStateWithString(setTheWordle, linerLiner, eyeLiner, foundPress);
                 setEyeLiner(eyeLiner + 1);
             }
         }
@@ -198,9 +206,9 @@ export default function Spiel(props : Prop) {
     }
 
     useEffect(() => {
-        window.addEventListener("click", obamna, false);
+        window.addEventListener("click", buttonPressRoutine, false);
         return () => {
-            window.removeEventListener("click", obamna, false);
+            window.removeEventListener("click", buttonPressRoutine, false);
         };
     })
 
@@ -209,12 +217,18 @@ export default function Spiel(props : Prop) {
     }
 
     return (
-        <div id={"container"}>r
+        <div id={"container"}>
+            <ul>
+                <li><a href={"/"}><img src={homeImage} alt={""} /></a></li>
+                <li><h2>SLORDLE</h2></li>
+                <li><img src={userImage} alt={""} /></li>
+            </ul>
+
             <div id={"panelContainer"}>
                 {lineOfLines}
             </div>
             <Keyboard key={"k"} keysOnBoard={keyboardIndex} />
-            <PostGamer statusus={postGamusHandlerus} funkcios={() => {setPostGamusHandlerus(false)}} />
+            <PostGamer statusus={postGamusHandlerus} funkcios={() => {setPostGamusHandlerus(false)}} condicio={areWeWinning}/>
         </div>
     );
 

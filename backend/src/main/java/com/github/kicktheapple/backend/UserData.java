@@ -1,5 +1,5 @@
 package com.github.kicktheapple.backend;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import jakarta.persistence.*;
 
 
@@ -22,7 +22,11 @@ public class UserData {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
+
+    public boolean checkPassword(String inputPassword) {
+        return new BCryptPasswordEncoder().matches(inputPassword, this.password);
     }
 
     public Long getId() {
