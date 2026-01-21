@@ -1,0 +1,11 @@
+# Ignore all dotfiles
+.*
+
+# Allow git files
+!.gitignore
+
+# TLS / certs
+**/certs/
+**/letsencrypt/
+**/*.pem
+**/*.key
