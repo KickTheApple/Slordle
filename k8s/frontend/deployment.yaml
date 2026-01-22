@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: frontend:1.0
+          image: docker-frontend:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
           readinessProbe:

@@ -1,6 +1,12 @@
 # Ignore all dotfiles
 .*
 
+# ignore image tars
+backend.tar
+frontend.tar
+k8s/backend.tar
+k8s/frontend.tar
+
 # Allow git files
 !.gitignore
 

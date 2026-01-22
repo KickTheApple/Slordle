@@ -16,6 +16,7 @@ spec:
       containers:
         - name: mariadb
           image: mariadb:11
+          imagePullPolicy: IfNotPresent
           env:
             - name: MARIADB_ROOT_PASSWORD
               valueFrom:

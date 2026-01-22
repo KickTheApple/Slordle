@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: backend
-          image: backend:1.0
+          image: docker-backend:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env:

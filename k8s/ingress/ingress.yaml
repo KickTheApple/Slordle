@@ -4,7 +4,6 @@ metadata:
   name: webapp-ingress
   namespace: webapp
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
     cert-manager.io/cluster-issuer: letsencrypt
 spec:
   tls:
